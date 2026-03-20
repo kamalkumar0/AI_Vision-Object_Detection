@@ -1,0 +1,256 @@
+/* General Setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f7ff;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Background Animated Orbs (Jaisa image me piche blue circles hain) */
+.bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    animation: float 10s infinite ease-in-out alternate;
+}
+
+.shape1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(43, 110, 255, 0.3);
+    top: -100px;
+    left: -100px;
+}
+
+.shape2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(0, 195, 255, 0.2);
+    bottom: -150px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) scale(1); }
+    100% { transform: translateY(30px) scale(1.1); }
+}
+
+/* Main Container with smooth fade in */
+.container {
+    text-align: center;
+    z-index: 1;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.fade-in {
+    animation: fadeIn 1.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.header h1 {
+    font-size: 2.5rem;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+/* Video Card Structure */
+.video-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    height: 480px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.video-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    background-color: #e9edf5;
+    color: #888;
+    line-height: 460px; /* Center alt text */
+}
+
+/* Buttons Styling */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0055ff, #0099ff);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 85, 255, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Smooth Theme Transitions */
+body {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Dark Mode Button Styling */
+.theme-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.theme-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* ------------------------------------- */
+/* DARK MODE THEME CLASSES               */
+/* ------------------------------------- */
+
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .header h1 {
+    color: #ffffff;
+}
+
+body.dark-mode .header p {
+    color: #aaaaaa;
+}
+
+body.dark-mode .video-card {
+    background: rgba(30, 30, 30, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .video-card img {
+    background-color: #1a1a1a;
+    color: #555;
+}
+
+body.dark-mode .btn-secondary {
+    background: #333;
+    color: #fff;
+}
+
+body.dark-mode .shape1 {
+    background: rgba(43, 110, 255, 0.15); /* Background orbs ko dark mode ke liye dim kar diya */
+}
+
+body.dark-mode .shape2 {
+    background: rgba(0, 195, 255, 0.1);
+}
+
+body.dark-mode .theme-btn {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* side views dikhane ke liye  */
+/* Filter Dropdown Styling */
+.filter-container {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.custom-select {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 2px solid #0055ff;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.custom-select:hover {
+    box-shadow: 0 6px 15px rgba(0, 85, 255, 0.2);
+}
+
+/* Dark Mode updates for Filter */
+body.dark-mode .filter-container {
+    color: #e0e0e0;
+}
+
+body.dark-mode .custom-select {
+    background-color: rgba(40, 40, 40, 0.8);
+    color: #fff;
+    border-color: #4da6ff;
+}

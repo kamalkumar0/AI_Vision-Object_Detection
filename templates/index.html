@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Vision</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+
+    <button id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
+
+    <div class="container fade-in">
+        <div class="header">
+            <h1>AI Vision by Kamal Sharma</h1>
+            <p>Real-Time YOLOv11 Object Detection</p>
+            
+            <div class="filter-container">
+                <label for="object-filter">Detect Only: </label>
+                <select id="object-filter" class="custom-select" onchange="updateFilter()">
+                    <option value="all">Show All Objects</option>
+                    </select>
+            </div>
+
+            <p id="detected-text" style="font-weight: bold; color: #0055ff; font-size: 1.2rem; margin-top: 15px;">Waiting for objects...</p>
+        </div>
+
+        <div class="video-card">
+            <img id="video-stream" src="" alt="Camera is currently off. Click Start to begin." />
+        </div>
+
+        <div class="controls">
+            <button id="start-btn" class="btn btn-primary" onclick="startCamera()">Start Camera</button>
+            <button id="stop-btn" class="btn btn-secondary" onclick="stopCamera()">Stop Camera</button>
+        </div>
+    </div>
+
+    <script>
+        const videoElement = document.getElementById('video-stream');
+        const detectedTextElement = document.getElementById('detected-text');
+        const filterDropdown = document.getElementById('object-filter');
+        
+        let isRunning = false;
+        let objectCheckInterval;
+        let lastSpokenObjects = [];
+
+        // Page load hone par saari classes mangwao
+        window.onload = () => {
+            fetch('/get_classes')
+                .then(response => response.json())
+                .then(classes => {
+                    for (let id in classes) {
+                        let option = document.createElement("option");
+                        option.value = id;
+                        option.text = classes[id].charAt(0).toUpperCase() + classes[id].slice(1);
+                        filterDropdown.appendChild(option);
+                    }
+                });
+        };
+
+        // Jab dropdown change ho toh backend ko batao
+        function updateFilter() {
+            let selectedClass = filterDropdown.value;
+            fetch('/set_filter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ class_id: selectedClass })
+            });
+            // Filter change karte hi voice memory clear kar do
+            lastSpokenObjects = []; 
+        }
+
+        function startCamera() {
+            fetch('/start_camera')
+                .then(response => response.json())
+                .then(data => {
+                    isRunning = true;
+                    videoElement.src = "/video_feed?" + new Date().getTime();
+                    objectCheckInterval = setInterval(checkObjectsAndSpeak, 2500);
+                });
+        }
+
+        function stopCamera() {
+            fetch('/stop_camera')
+                .then(response => response.json())
+                .then(data => {
+                    isRunning = false;
+                    videoElement.src = "";
+                    detectedTextElement.innerText = "Camera Stopped";
+                    clearInterval(objectCheckInterval);
+                    lastSpokenObjects = [];
+                    window.speechSynthesis.cancel(); 
+                });
+        }
+
+        function checkObjectsAndSpeak() {
+            if (!isRunning) return;
+
+            fetch('/get_objects')
+                .then(response => response.json())
+                .then(data => {
+                    let currentObjects = data.objects;
+                    
+                    if (currentObjects.length > 0) {
+                        detectedTextElement.innerText = "I see: " + currentObjects.join(", ");
+                        
+                        let newObjects = currentObjects.filter(obj => !lastSpokenObjects.includes(obj));
+                        if (newObjects.length > 0) {
+                            let textToSpeak = newObjects.join(" and ");
+                            let speech = new SpeechSynthesisUtterance(textToSpeak);
+                            speech.rate = 1; 
+                            window.speechSynthesis.speak(speech);
+                        }
+                        lastSpokenObjects = currentObjects;
+                    } else {
+                        detectedTextElement.innerText = "No objects detected";
+                        lastSpokenObjects = [];
+                    }
+                });
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            let btn = document.getElementById('theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                btn.innerText = "☀️ Light Mode";
+                detectedTextElement.style.color = "#4da6ff"; 
+            } else {
+                btn.innerText = "🌙 Dark Mode";
+                detectedTextElement.style.color = "#0055ff";
+            }
+        }
+    </script>
+</body>
+</html>
