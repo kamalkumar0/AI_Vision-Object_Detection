@@ -1,7 +1,3 @@
-Here’s a clean, professional **README.md** you can directly use for your GitHub repo based on your project:
-
----
-
 # 🚀 AI Vision – Real-Time Object Detection (YOLOv11)
 
 AI Vision is a real-time object detection web application built using **Flask + YOLOv11 + OpenCV**. It detects objects from your webcam and provides **live visual + voice feedback** with filtering options.
